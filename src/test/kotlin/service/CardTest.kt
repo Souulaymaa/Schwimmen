@@ -10,10 +10,10 @@ import entity.CardValue
  */
 class CardTest {
     //initialise some cards to test with
-    private val aceOfHearts = Card(CardSuit.HEARTS, CardValue.ACE)
+    private val queenOfHearts = Card(CardSuit.HEARTS, CardValue.QUEEN)
     private val sevenOfClubs = Card(CardSuit.CLUBS, CardValue.SEVEN)
     private val jackOfSpades = Card(CardSuit.SPADES, CardValue.JACK)
-    private val anotherAceOfHearts = Card(CardSuit.HEARTS, CardValue.ACE)
+    private val anotherJackOfSpades = Card(CardSuit.SPADES, CardValue.JACK)
     private val kingOfDiamonds = Card(CardSuit.DIAMONDS, CardValue.KING)
 
     // unicode characters for the suits
@@ -27,7 +27,7 @@ class CardTest {
      */
     @Test
     fun testToString(){
-        assertEquals(heartsChar + "A", aceOfHearts.toString())
+        assertEquals(heartsChar + "Q", queenOfHearts.toString())
         assertEquals(clubsChar + "7", sevenOfClubs.toString())
         assertEquals(spadesChar + "J", jackOfSpades.toString())
         assertEquals(diamondsChar + "K", kingOfDiamonds.toString())
@@ -55,7 +55,7 @@ class CardTest {
      */
     @Test
     fun testCompareTo() {
-        assertTrue( sevenOfClubs < aceOfHearts)
+        assertTrue( sevenOfClubs < queenOfHearts)
         assertFalse(kingOfDiamonds < jackOfSpades)
         assertTrue(jackOfSpades <= kingOfDiamonds)
     }
@@ -67,8 +67,8 @@ class CardTest {
      */
     @Test
     fun testEquals() {
-        assertEquals(aceOfHearts, anotherAceOfHearts)
-        assertNotSame(aceOfHearts, anotherAceOfHearts)
+        assertEquals(jackOfSpades, anotherJackOfSpades)
+        assertNotSame(jackOfSpades, anotherJackOfSpades)
     }
 
 }
