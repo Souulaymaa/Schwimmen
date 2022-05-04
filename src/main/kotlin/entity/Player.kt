@@ -13,12 +13,15 @@ import java.util.ArrayDeque
  * @throws IllegalArgumentException Wenn der Spielername leer ist
  */
 
-class Player( val playerName: String, val playerCards : ArrayDeque<Card> = ArrayDeque(3)) {
+class Player( val playerName: String, val playerCards : ArrayList<Card>) {
     override fun toString(): String = "$playerName"
     val knocked: Boolean = false
     init{
         if(playerName == ""){
             throw IllegalArgumentException("The Player name is empty")
+        }
+        if(playerCards.size != 3){
+            throw IllegalArgumentException("The number of cards does not equal 3")
         }
     }
 }
