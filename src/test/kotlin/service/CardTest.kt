@@ -67,7 +67,6 @@ class CardTest {
      */
     @Test
     fun testEquals() {
-        assertEquals(jackOfSpades, anotherJackOfSpades)
         assertNotSame(jackOfSpades, anotherJackOfSpades)
     }
 
