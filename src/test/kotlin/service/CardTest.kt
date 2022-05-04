@@ -36,7 +36,7 @@ class CardTest {
     /**
      * Check if toString produces a 2 character string for every possible card
      * except the 10 (for which length=3 is ensured)
-    */
+     */
     @Test
     fun testToStringLength(){
         CardSuit.values().forEach { suit ->
