@@ -13,5 +13,8 @@ class Card(val suit: CardSuit, val value: CardValue) {
 
     override fun toString() = "$suit$value"
 
+    /**
+     *  compares two [WarCard]s according to the [Enum.ordinal] value of their [CardSuit]
+     */
     operator fun compareTo(other: Card) = this.value.ordinal - other.value.ordinal
 }

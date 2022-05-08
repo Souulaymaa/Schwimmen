@@ -29,7 +29,7 @@ class Playertest {
 
     //test with an actual player's name
     @Test
-    fun testplayer(){
+    fun testName(){
         val player = Player("Anna", handcards)
         assertEquals(player.playerName, "Anna")
     }

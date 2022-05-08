@@ -16,6 +16,8 @@ import java.util.ArrayDeque
 class Player( val playerName: String, val playerCards : ArrayList<Card>) {
     override fun toString(): String = "$playerName"
     var knocked: Boolean = false
+
+    //set the constraints
     init{
         if(playerName == ""){
             throw IllegalArgumentException("The Player name is empty")

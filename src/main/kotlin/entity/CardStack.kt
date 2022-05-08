@@ -1,7 +1,14 @@
 package entity
 import java.util.*
 
-
+/**
+ * Die Klasse für die Entität CardStack die der Kartenstapel und die Tischkarten verwaltet.
+ *
+ * Der Konstruktor erwartet 2 Stapeln [drawStack] mit maximalem size von 32 und [tableStack] mit genau 3 Karten.
+ *
+ * @param drawStack Der Stapel der übrigen Karten.
+ * @param tableStack Die Tischkarten.
+ */
 class CardStack ( val drawStack: ArrayList<Card> , var tableStack : ArrayList<Card>) {
 
     init{
