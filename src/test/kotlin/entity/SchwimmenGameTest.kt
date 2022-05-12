@@ -1,10 +1,6 @@
 package gametest
 
-import entity.Card
-import entity.CardSuit
-import entity.CardValue
-import entity.Player
-import entity.SchwimmenGame
+import entity.*
 import org.junit.jupiter.api.Test
 import java.lang.IllegalArgumentException
 import java.util.*
@@ -17,6 +13,14 @@ class SchwimmenGameTest {
         Card(CardSuit.HEARTS, CardValue.QUEEN),
         Card(CardSuit.CLUBS, CardValue.SEVEN),
         Card(CardSuit.SPADES, CardValue.JACK))
+
+    //inialise table cards
+    val tablecards : MutableList<Card> = arrayListOf(
+        Card(CardSuit.HEARTS, CardValue.ACE),
+        Card(CardSuit.SPADES, CardValue.SEVEN),
+        Card(CardSuit.SPADES, CardValue.EIGHT))
+
+    val cardStack = CardStack(handcards,tablecards)
 
     // initialise some players for the test
     val player1 = Player("Player 1", handcards);
@@ -36,7 +40,7 @@ class SchwimmenGameTest {
     //test with valid number of players
     @Test
     fun validPlayersNumber(){
-        val game = SchwimmenGame(nums2)
+        val game = SchwimmenGame(nums2, cardStack)
         assertEquals(nums.remove(), player1)
         assertEquals(nums.remove(), player2)
         assertEquals(nums.remove(), player3)

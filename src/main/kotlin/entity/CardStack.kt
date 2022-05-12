@@ -1,5 +1,6 @@
 package entity
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Die Klasse für die Entität CardStack die der Kartenstapel und die Tischkarten verwaltet.
@@ -9,7 +10,7 @@ import java.util.*
  * @param drawStack Der Stapel der übrigen Karten.
  * @param tableStack Die Tischkarten.
  */
-class CardStack ( val drawStack: ArrayList<Card> , var tableStack : ArrayList<Card>) {
+class CardStack ( val drawStack: MutableList<Card> = ArrayList() , var tableStack : MutableList<Card> = ArrayList()) {
 
     init{
         if(tableStack.size != 3){
