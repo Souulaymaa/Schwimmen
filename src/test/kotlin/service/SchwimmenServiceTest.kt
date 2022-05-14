@@ -12,8 +12,8 @@ import kotlin.test.*
  */
 class SchwimmenServiceTest {
 
-    private val rootService = RootService()
-    private val schwimmenGameService = SchwimmenGameService(rootService)
+
+    private val schwimmenGameService = SchwimmenGameService()
 
     //initialise some cards
     val card1 = Card(CardSuit.HEARTS, CardValue.QUEEN)
@@ -32,7 +32,7 @@ class SchwimmenServiceTest {
      */
     @Test
     fun createNewGameCaseOne(){
-        assertNull(rootService.currentGame)
+        assertNull(schwimmenGameService.currentGame)
 
         //if wrong numbers of players are given.
         assertFails { schwimmenGameService.createNewGame(players2) }
@@ -40,9 +40,9 @@ class SchwimmenServiceTest {
 
         schwimmenGameService.createNewGame(players1)
 
-        assertNotNull(rootService.currentGame) // Check if game was created.
+        assertNotNull(schwimmenGameService.currentGame) // Check if game was created.
 
-        val currentGame = rootService.currentGame
+        val currentGame = schwimmenGameService.currentGame
         requireNotNull(currentGame)
 
         // Check if properties of game are correct.
@@ -70,7 +70,7 @@ class SchwimmenServiceTest {
         schwimmenGameService.createNewGame(players1)
         schwimmenGameService.endGame()
 
-        val currentGame = rootService.currentGame
+        val currentGame = schwimmenGameService.currentGame
         requireNotNull(currentGame)
 
         currentGame.players.forEach {
@@ -86,7 +86,7 @@ class SchwimmenServiceTest {
     fun endGameCaseTwo(){
         schwimmenGameService.createNewGame(players1)
 
-        val currentGame = rootService.currentGame
+        val currentGame = schwimmenGameService.currentGame
         requireNotNull(currentGame)
 
         // Fill the players's hands with customized cards.
@@ -130,7 +130,7 @@ class SchwimmenServiceTest {
 
         schwimmenGameService.createNewGame(players1)
 
-        val currentGame = rootService.currentGame
+        val currentGame = schwimmenGameService.currentGame
         requireNotNull(currentGame)
 
         assertEquals(currentGame.currentPlayer,currentGame.players[0])
@@ -155,7 +155,7 @@ class SchwimmenServiceTest {
     fun endMoveCaseTwo(){
         schwimmenGameService.createNewGame(players1)
 
-        val currentGame = rootService.currentGame
+        val currentGame = schwimmenGameService.currentGame
         requireNotNull(currentGame)
         // Mark the next player as a knocker
         currentGame.players[1].knocked = true

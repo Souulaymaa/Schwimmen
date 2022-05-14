@@ -6,7 +6,7 @@ import entity.*
  * Service layer class that provides the logic for the four possible actions a player
  * can take in Schwimmen: exchange all cards, exchange one card, pass and knock.
  */
-class PlayerActionService (private val rootService: RootService) : AbstractRefreshingService() {
+class PlayerActionService (private val sgs : SchwimmenGameService) : AbstractRefreshingService() {
 
     /**
      * Method that implements the [Player] action knock.
@@ -17,12 +17,12 @@ class PlayerActionService (private val rootService: RootService) : AbstractRefre
      */
     fun knock() {
         //get current game
-        val game = rootService.currentGame
+        val game = sgs.currentGame
         checkNotNull(game)
 
         //mark the current player as a knocker
         game.currentPlayer.knocked = true
-        rootService.gameService.endMove()
+        sgs.endMove()
     }
 
 
@@ -39,7 +39,7 @@ class PlayerActionService (private val rootService: RootService) : AbstractRefre
      */
     fun pass() {
         //get current game
-        val game = rootService.currentGame
+        val game = sgs.currentGame
         checkNotNull(game)
         // increment the pass counter
         game.incrementPassCount()
@@ -53,14 +53,14 @@ class PlayerActionService (private val rootService: RootService) : AbstractRefre
                  onAllRefreshables {
                       refreshCards()
                   }
-                rootService.gameService.endMove()
+                sgs.endMove()
             } else {
                 // if we have less than 3 cards in the card stack
-                rootService.gameService.endGame()
+                sgs.endGame()
             }
         } else {
 
-            rootService.gameService.endMove()
+            sgs.endMove()
         }
 
     }
@@ -73,7 +73,7 @@ class PlayerActionService (private val rootService: RootService) : AbstractRefre
      */
     private fun replaceTableCards() {
         //get current game
-        val game = rootService.currentGame
+        val game = sgs.currentGame
         checkNotNull(game)
         // initialise the table cards with three cards from the card stacks
         game.tableStack = game.cardStack.drawThree()
@@ -91,7 +91,7 @@ class PlayerActionService (private val rootService: RootService) : AbstractRefre
      */
     fun exchangeOneCard(playerCardPos: Int, tableCardPos: Int) {
         //get current game
-        val game = rootService.currentGame
+        val game = sgs.currentGame
         checkNotNull(game)
         //the counter is set to 0
         game.resetPassCount()
@@ -103,7 +103,7 @@ class PlayerActionService (private val rootService: RootService) : AbstractRefre
         onAllRefreshables {
             refreshCards()
         }
-        rootService.gameService.endMove()
+       sgs.endMove()
 
     }
 
@@ -116,7 +116,7 @@ class PlayerActionService (private val rootService: RootService) : AbstractRefre
      */
     fun exchangeAllCards() {
         //get current game
-        val game = rootService.currentGame
+        val game = sgs.currentGame
         checkNotNull(game)
 
         game.resetPassCount()
@@ -128,7 +128,7 @@ class PlayerActionService (private val rootService: RootService) : AbstractRefre
         onAllRefreshables {
             refreshCards()
         }
-        rootService.gameService.endMove()
+        sgs.endMove()
 
     }
 

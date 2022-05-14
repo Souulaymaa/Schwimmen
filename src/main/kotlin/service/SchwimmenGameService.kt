@@ -7,9 +7,17 @@ import java.util.*
 /**
  * Service layer class that provides the logic for actions not directly related to a player.
  */
-class SchwimmenGameService(private val rootService: RootService): AbstractRefreshingService() {
+class SchwimmenGameService(): AbstractRefreshingService() {
 
-    val scoreService = ScoreService(rootService)
+    val scoreService : ScoreService = ScoreService(this)
+    val playerActionService = PlayerActionService(this)
+
+    /**
+     * The currently active game. Can be `null`, if no game has started yet.
+     */
+    var currentGame : SchwimmenGame? = null
+
+
     /**
      * Creates a [SchwimmenGame] with the [Player]s named in the [List].
 
@@ -31,7 +39,7 @@ class SchwimmenGameService(private val rootService: RootService): AbstractRefres
         }
 
         //initialize the current game
-        rootService.currentGame = SchwimmenGame(players , cardStack,  players[0])
+        currentGame = SchwimmenGame(players , cardStack,  players[0])
 
         onAllRefreshables {  refreshAfterCreateSchwimmenGame() }
 
@@ -54,7 +62,7 @@ class SchwimmenGameService(private val rootService: RootService): AbstractRefres
 
     fun endGame() {
 
-        val game = rootService.currentGame
+        val game = currentGame
         checkNotNull(game) { "No game started yet." }
 
         scoreService.calculateScore()
@@ -75,7 +83,7 @@ class SchwimmenGameService(private val rootService: RootService): AbstractRefres
      */
     fun endMove() {
         //get current
-        val game = rootService.currentGame
+        val game = currentGame
         checkNotNull(game) { "No game currently running."}
 
         val x = game.currentPlayer

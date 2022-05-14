@@ -10,9 +10,9 @@ import kotlin.test.assertEquals
  * Test cases for the [ScoreService]
  */
 class ScoreServiceTest {
-    private val rootService = RootService()
-    private val schwimmenGameService = SchwimmenGameService(rootService)
-    private val scoreService = ScoreService(rootService)
+
+    private val schwimmenGameService = SchwimmenGameService()
+    private val scoreService = ScoreService(schwimmenGameService)
 
     ///initialize some cards
     val card1 = Card(CardSuit.HEARTS, CardValue.QUEEN)
@@ -37,7 +37,7 @@ class ScoreServiceTest {
     fun testCalculateScore(){
         schwimmenGameService.createNewGame(players1)
 
-        val currentGame = rootService.currentGame
+        val currentGame = schwimmenGameService.currentGame
         requireNotNull(currentGame)
 
         //Fill the players's hands with customized cards
@@ -70,7 +70,7 @@ class ScoreServiceTest {
     fun testDetermineWinner(){
         schwimmenGameService.createNewGame(players1)
 
-        val currentGame = rootService.currentGame
+        val currentGame = schwimmenGameService.currentGame
         requireNotNull(currentGame)
 
         //Fill the players's hands with customized cards
@@ -89,7 +89,7 @@ class ScoreServiceTest {
             currentGame.players[2].playerCards.add(0,it)
         }
         // determines the winner
-        var winner = scoreService.determineWinner()
+        val winner = scoreService.determineWinner()
         assertEquals(currentGame.players[2],winner)
     }
 

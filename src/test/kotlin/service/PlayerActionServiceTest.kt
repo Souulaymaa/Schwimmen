@@ -13,9 +13,8 @@ import kotlin.test.*
  */
 class PlayerActionServiceTest {
 
-    private val rootService = RootService()
-    private val playerActionService = PlayerActionService(rootService)
-    private val schwimmenGameService = SchwimmenGameService(rootService)
+    private val schwimmenGameService = SchwimmenGameService()
+    private val playerActionService = PlayerActionService(schwimmenGameService)
 
 
     val card1 = Card(CardSuit.HEARTS, CardValue.QUEEN)
@@ -33,7 +32,7 @@ class PlayerActionServiceTest {
     fun testexchangeAllCards() {
         assertFailsWith<IllegalStateException> { playerActionService.exchangeAllCards() }
         schwimmenGameService.createNewGame(players)
-        val currentgame = rootService.currentGame
+        val currentgame = schwimmenGameService.currentGame
         requireNotNull(currentgame)
         currentgame.incrementPassCount()
         val currentTableCardsList = currentgame.tableStack
@@ -60,7 +59,7 @@ class PlayerActionServiceTest {
 // if there is a currently active game
         schwimmenGameService.createNewGame(players)
 
-        val currentgame = rootService.currentGame
+        val currentgame = schwimmenGameService.currentGame
         requireNotNull(currentgame)
 
         currentgame.incrementPassCount() // Increment numberPassed to check if it is set back to 0 correctly.
@@ -121,7 +120,7 @@ class PlayerActionServiceTest {
 
         schwimmenGameService.createNewGame(players)
 
-        val currentgame = rootService.currentGame
+        val currentgame = schwimmenGameService.currentGame
         requireNotNull(currentgame)
 
         val currentTableCardsList = currentgame.tableStack
@@ -144,7 +143,7 @@ class PlayerActionServiceTest {
 
         schwimmenGameService.createNewGame(players)
 
-        val currentgame = rootService.currentGame
+        val currentgame = schwimmenGameService.currentGame
         requireNotNull(currentgame)
 
         assertFalse(currentgame.currentPlayer.knocked)

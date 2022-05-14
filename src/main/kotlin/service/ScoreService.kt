@@ -6,7 +6,7 @@ import entity.CardSuit
 import entity.CardValue
 
 
-class ScoreService(private val rootService: RootService) : AbstractRefreshingService() {
+class ScoreService(private val sgs: SchwimmenGameService) : AbstractRefreshingService() {
 
 
     /**
@@ -14,7 +14,7 @@ class ScoreService(private val rootService: RootService) : AbstractRefreshingSer
      */
      fun calculateScore() {
         //get the current game
-        val game = rootService.currentGame
+        val game = sgs.currentGame
         checkNotNull(game) { "No game started yet." }
         //call the help function evaluateHand for each player
         game.players.forEach {
@@ -84,8 +84,11 @@ class ScoreService(private val rootService: RootService) : AbstractRefreshingSer
         return counter
     }
 
+    /**
+     * looks for the player with highest score and marks them as the winner
+     */
     fun determineWinner() : Player{
-        val game = rootService.currentGame
+        val game = sgs.currentGame
         checkNotNull(game) { "No game started yet." }
         var maxScore : Double = 0.0
         var winner : Player = game.players[0]
