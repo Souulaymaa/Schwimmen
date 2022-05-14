@@ -84,6 +84,20 @@ class ScoreService(private val rootService: RootService) : AbstractRefreshingSer
         return counter
     }
 
+    fun determineWinner() : Player{
+        val game = rootService.currentGame
+        checkNotNull(game) { "No game started yet." }
+        var maxScore : Double = 0.0
+        var winner : Player = game.players[0]
+        calculateScore()
 
+        for(i in 0..game.players.size-1){
+            if(game.players[i].score > maxScore){
+                maxScore = game.players[i].score
+                winner = game.players[i]
+            }
+        }
+        return winner
+    }
 
 }

@@ -62,4 +62,35 @@ class ScoreServiceTest {
         assertEquals(currentGame.players[1].score,28.0)
         assertEquals(currentGame.players[2].score,30.5)
     }
+
+    /**
+     * Test cases for [determineWinner]
+     */
+    @Test
+    fun testDetermineWinner(){
+        schwimmenGameService.createNewGame(players1)
+
+        val currentGame = rootService.currentGame
+        requireNotNull(currentGame)
+
+        //Fill the players's hands with customized cards
+        currentGame.players[0].playerCards.clear()
+        listOf(card1,card2,card3).forEach{
+            currentGame.players[0].playerCards.add(0,it)
+        }
+
+        currentGame.players[1].playerCards.clear()
+        listOf(card4,card5,card6).forEach{
+            currentGame.players[1].playerCards.add(0,it)
+        }
+
+        currentGame.players[2].playerCards.clear()
+        listOf(card7,card8,card9).forEach{
+            currentGame.players[2].playerCards.add(0,it)
+        }
+        // determines the winner
+        var winner = scoreService.determineWinner()
+        assertEquals(currentGame.players[2],winner)
+    }
+
 }
