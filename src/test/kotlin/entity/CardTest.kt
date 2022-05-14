@@ -61,12 +61,11 @@ class CardTest {
     }
 
     /**
-     * Check if two cards with the same CardSuit/CardValue combination are equal
-     * in the sense of the `==` operator, but not the same in the sense of
-     * the `===` operator.
+     * Check if two cards with the same CardSuit/CardValue combination are not equal
+     *  in the sense of the `===` operator.
      */
     @Test
-    fun testEquals() {
+    fun testNotSame() {
         assertNotSame(jackOfSpades, anotherJackOfSpades)
     }
 

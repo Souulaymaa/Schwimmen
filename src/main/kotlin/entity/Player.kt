@@ -3,19 +3,25 @@ package entity
 import java.util.ArrayDeque
 
 /**
- * Die Entität [Player].
+ * * Entity to represent a [Player] in the game "Schwimmen"
  *
- * Der Konstruktor erwartet einen Namen, die Handkarten und die Variable [knocked], die uns kennenzeichnet, dass der Spieler
- * geklopft hat.
+ * The constructor is waiting for a name, the player cards and the Variable [knocked],
+ * that shows, that the player has knocked.
  *
- * @param playerName Der Spielername.
- * @param playerCards Die Handkarten.
- * @throws IllegalArgumentException Wenn der Spielername leer ist
+ * @param [playerName] the player name
+ * @param [playerCards] the player cards
+ * @param [cardStack] Die cards stack
+ * @param [score] the player score
+ * @throws IllegalArgumentException When the player's name is empty
+ * @throws IllegalArgumentException When the size of the player cards is invalid
  */
 
-class Player( val playerName: String, val playerCards : ArrayList<Card>) {
+class Player( val playerName: String, val cardStack: CardStack = CardStack()) {
     override fun toString(): String = "$playerName"
+
     var knocked: Boolean = false
+    var score: Double = 0.0
+    var playerCards = cardStack.drawThree()
 
     //set the constraints
     init{
@@ -23,7 +29,7 @@ class Player( val playerName: String, val playerCards : ArrayList<Card>) {
             throw IllegalArgumentException("The Player name is empty")
         }
         if(playerCards.size != 3){
-            throw IllegalArgumentException("The number of cards does not equal 3")
+            throw IllegalArgumentException("The number of cards is not valid")
         }
     }
 }

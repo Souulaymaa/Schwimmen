@@ -2,20 +2,31 @@ package entity
 import java.util.*
 
 /**
- * Eine Entitätsklasse, die der Spiel darstellt.
+ * Entity class that represents the Schwimmen Game.
  *
- * @param [players] Die Liste der Spieler
+ * @param [players] the list of the players
+ * @param [cardStack] the card stack
+ * @param [currentPlayer] the player that is in the row
+ * @param [passCount] the counter of the action pass
+ * @param [tableStack] the table cards
  * @throws IllegalArgumentException wenn die Anzahl der Spieler ungültig ist
  */
-class SchwimmenGame(val players : Queue<Player> = LinkedList<Player>(), val cardStack: CardStack = CardStack()){
+data class SchwimmenGame(val players : List<Player> = LinkedList<Player>(), val cardStack: CardStack = CardStack(),
+                    var currentPlayer: Player)
+{
     var passCount: Int = 0
+    var tableStack: MutableList<Card> = cardStack.drawThree()
 
-    //set pass Counter as 0
+    /**
+     * set pass Counter as 0
+     */
     fun resetPassCount(){
         passCount = 0
     }
 
-    //increment Pass Counter by 1
+    /**
+     * increment Pass Counter by 1
+     * */
     fun incrementPassCount(){
         passCount ++
     }
@@ -26,5 +37,8 @@ class SchwimmenGame(val players : Queue<Player> = LinkedList<Player>(), val card
         }
     }
 }
+
+
+
 
 

@@ -1,122 +1,145 @@
 package service
+
 import entity.*
 
+/**
+ * Service layer class that provides the logic for the four possible actions a player
+ * can take in Schwimmen: exchange all cards, exchange one card, pass and knock.
+ */
+class PlayerActionService (private val rootService: RootService) : AbstractRefreshingService() {
 
-class PlayerActionService(private val sgs : SchwimmenGameService) : AbstractRefreshingService() {
+    /**
+     * Method that implements the [Player] action knock.
+     *
+     * The pass counter passCount is set to 0 and the current Player is marked as a knocker.
+     *
+     * @throws IllegalStateException If there is no currently active game.
+     */
+    fun knock() {
+        //get current game
+        val game = rootService.currentGame
+        checkNotNull(game)
 
-    //get current game
-    val game = this.sgs.currentGame
-    fun exchangeAllCards() {
-
-        //set pass counter to o
-        game.resetPassCount()
-
-        //remove and save current first player of queue
-        var currentPlayer = game.players.poll()
-
-        //get the table cards
-        var tableStack = game.cardStack.tableStack
-
-        //swap player Cards and table Cards
-        var cardCache: ArrayList<Card> = ArrayList(3)
-        move(currentPlayer.playerCards, cardCache)
-        move(tableStack, currentPlayer.playerCards)
-        move(cardCache, tableStack)
-
-        //add player to the end of queue
-        game.players.add(currentPlayer)
-
-        //check if next Player has knocked
-        if (game.players.peek().knocked == true) {
-            sgs.endGame()
-        } else {
-            //onAllRefreshables { refreshCards() }
-        }
+        //mark the current player as a knocker
+        game.currentPlayer.knocked = true
+        rootService.gameService.endMove()
     }
 
-    fun exchangeOneCard(PlayerCardNum : Int, tableCardNum: Int){
-        //set passCount to 0
-        game.resetPassCount()
 
-        //remove and save current first player of queue
-        var currentPlayer = game.players.poll()
-
-        //get the table cards
-        var tableStack = game.cardStack.tableStack
-
-        //swap player card and table card
-        var cache : Card = currentPlayer.playerCards[PlayerCardNum]
-        currentPlayer.playerCards[PlayerCardNum] = tableStack[tableCardNum]
-        tableStack[tableCardNum] = cache
-
-        //add player to the end of queue
-        game.players.add(currentPlayer)
-
-        //check if next Player has knocked
-        if (game.players.peek().knocked == true) {
-            sgs.endGame()
-        } else {
-            //onAllRefreshables { refreshCards() }
-        }
-    }
-
+    /**
+     * Method that implements the [Player] action pass.
+     * The pass counter passCount is incremented.
+     *
+     * If passCount equals the number of Players (all the players passed in the same round),
+     * the [tableStack] are replaced and the pass counter is set to 0.
+     *
+     * we must check if the card stack still has enough cards. if not we end the game
+     *
+     * @throws IllegalStateException If there is no currently active game.
+     */
     fun pass() {
-        //increment Pass Counter
+        //get current game
+        val game = rootService.currentGame
+        checkNotNull(game)
+        // increment the pass counter
         game.incrementPassCount()
-        var playerCount = sgs.currentGame.players.count()
-        var passCounter = game.passCount
-        //get the table cards and the draw cards
-        var tableStack = game.cardStack.tableStack
-        var drawStack = game.cardStack.drawStack
+        if (game.passCount == game.players.size) {
+            //the counter is set to 0 since all players have passed
+            game.resetPassCount()
+            if (game.cardStack.size >= 3) {
+                // hilfsfunktion
+                replaceTableCards()
 
-        //check if all players passed in a row
-        if(passCounter == playerCount){
-            if(drawStack.size >= 3){
-                discardCards()
-                game.resetPassCount()
+                 onAllRefreshables {
+                      refreshCards()
+                  }
+                rootService.gameService.endMove()
+            } else {
+                // if we have less than 3 cards in the card stack
+                rootService.gameService.endGame()
             }
-            else {
-                sgs.endGame()
-            }
-        }
-        else {
-            game.incrementPassCount()
-        }
-
-        //check if next Player has knocked
-        if (game.players.peek().knocked == true) {
-            sgs.endGame()
         } else {
-            //onAllRefreshables { refreshCards() }
+
+            rootService.gameService.endMove()
         }
 
     }
 
-    fun knock(){
-        val currentPlayer = game.players.poll()
-        currentPlayer.knocked == true
+    /**
+     * this is a help function that allows us to exchange the [tableStack].
+     * The Cards are replaced by new ones out of the card Stack.
+     *
+     * @throws IllegalStateException If there is no currently active game
+     */
+    private fun replaceTableCards() {
+        //get current game
+        val game = rootService.currentGame
+        checkNotNull(game)
+        // initialise the table cards with three cards from the card stacks
+        game.tableStack = game.cardStack.drawThree()
+
+        }
+
+
+
+    /**
+     * Method that implements the [Player] action of exchanging one card from[playerCards] with one from the [tableStack].
+     *
+     * The pass counter passCount is set to 0 and the exchange(Dreieckstausch) is executed.
+     *
+     * @exception IllegalStateException If there is no currently active game.
+     */
+    fun exchangeOneCard(playerCardPos: Int, tableCardPos: Int) {
+        //get current game
+        val game = rootService.currentGame
+        checkNotNull(game)
+        //the counter is set to 0
+        game.resetPassCount()
+        // dreieckstausch
+        val temp = game.tableStack[tableCardPos]
+        game.tableStack[tableCardPos] = game.currentPlayer.playerCards[playerCardPos]
+        game.currentPlayer.playerCards[playerCardPos] = temp
+
+        onAllRefreshables {
+            refreshCards()
+        }
+        rootService.gameService.endMove()
+
+    }
+
+    /**
+     * Method that implements the [Player] action of exchanging all the [playerCards] with the [tableStack].
+     *
+     * The pass counter passCount is set to 0 and the exchange(Dreieckstausch) is executed.
+     *
+     * @exception IllegalStateException If there is no currently active game.
+     */
+    fun exchangeAllCards() {
+        //get current game
+        val game = rootService.currentGame
+        checkNotNull(game)
+
         game.resetPassCount()
 
-        //add player to the end of queue
-        game.players.add(currentPlayer)
+        val temp = game.tableStack
+        game.tableStack = game.currentPlayer.playerCards
+        game.currentPlayer.playerCards = temp
+
+        onAllRefreshables {
+            refreshCards()
+        }
+        rootService.gameService.endMove()
 
     }
 
-
-    fun <T : Any?> move(source: MutableList<T>, target: MutableList<T>){
-        for(i in 1..3){
-            target.add(source.removeFirst())
-        }
-    }
-
-    fun discardCards(){
-        var cardStack = game.cardStack
-        for (index in 1..3){
-            cardStack.tableStack.removeFirst()
-            cardStack.tableStack.add(cardStack.drawStack.removeFirst())
-        }
-
-        }
 
 
 }
+
+
+
+
+
+
+
+

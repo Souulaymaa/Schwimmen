@@ -6,22 +6,30 @@ import entity.CardSuit
 import entity.CardValue
 
 
-class ScoreService(private val sgs : SchwimmenGameService) : AbstractRefreshingService() {
+class ScoreService(private val rootService: RootService) : AbstractRefreshingService() {
 
-    //get current game
-    val game = sgs.currentGame
-    val players = game.players
-    var score : Double = 0.0
 
-    fun calculateScore(){
-        for(p in players){
-            score = evaluateHand(p.playerCards)
+    /**
+     * Calculates the score for every [Player] in the [SchwimmenGame] .
+     */
+     fun calculateScore() {
+        //get the current game
+        val game = rootService.currentGame
+        checkNotNull(game) { "No game started yet." }
+        //call the help function evaluateHand for each player
+        game.players.forEach {
+            it.score = calculateHand(it.playerCards)
         }
     }
 
-    fun evaluateHand(hand : ArrayList<Card>) : Double{
+
+    /**
+     * Calculates the score for a given [playerCards].
+     */
+    fun calculateHand(playerCards: MutableList<Card>): Double {
+
         val score =
-            if (hand[0].value== hand[1].value && hand[1].value== hand[2].value) {
+            if (playerCards[0].value== playerCards[1].value && playerCards[1].value== playerCards[2].value) {
                 30.5
             } else {
                 var clubsCounter = 0.0
@@ -29,26 +37,26 @@ class ScoreService(private val sgs : SchwimmenGameService) : AbstractRefreshingS
                 var heartsCounter = 0.0
                 var diamondsCounter = 0.0
                 for (i in 0..2){
-                    if(hand[i].suit== CardSuit.CLUBS){
+                    if(playerCards[i].suit==CardSuit.CLUBS){
 
-                        clubsCounter+=counter(hand[i])
-
-                    }
-
-                    else if(hand[i].suit== CardSuit.SPADES){
-
-                        spadesCounter+=counter(hand[i])
+                        clubsCounter+=counter(playerCards[i])
 
                     }
 
-                    else if(hand[i].suit== CardSuit.HEARTS){
+                    else if(playerCards[i].suit==CardSuit.SPADES){
 
-                        heartsCounter+=counter(hand[i])
+                        spadesCounter+=counter(playerCards[i])
 
                     }
-                    else if(hand[i].suit== CardSuit.DIAMONDS){
 
-                        diamondsCounter+=counter(hand[i])
+                    else if(playerCards[i].suit==CardSuit.HEARTS){
+
+                        heartsCounter+=counter(playerCards[i])
+
+                    }
+                    else if(playerCards[i].suit==CardSuit.DIAMONDS){
+
+                        diamondsCounter+=counter(playerCards[i])
 
                     }
 
@@ -56,10 +64,15 @@ class ScoreService(private val sgs : SchwimmenGameService) : AbstractRefreshingS
                 maxOf(clubsCounter,spadesCounter,heartsCounter,diamondsCounter)
             }
         return score
+
     }
 
+    /**
+     * help function that return a double represting a card value
+     */
     private fun counter(card: Card):Double{
         var counter = 0.0
+
         if (card.value== CardValue.SEVEN){counter+=7}
         else if (card.value== CardValue.EIGHT){counter+=8}
         else if (card.value== CardValue.NINE){counter+=9}
@@ -70,6 +83,7 @@ class ScoreService(private val sgs : SchwimmenGameService) : AbstractRefreshingS
         else if (card.value== CardValue.ACE){counter+=11}
         return counter
     }
+
 
 
 }
