@@ -15,12 +15,21 @@ class PlayerActionServiceTest {
 
     private val schwimmenGameService = SchwimmenGameService()
     private val playerActionService = PlayerActionService(schwimmenGameService)
+    private val cardService = CardService(schwimmenGameService)
 
+    //initialise table cards
+    val tableCards = arrayListOf<Card>(
+        Card(CardSuit.HEARTS, CardValue.QUEEN),
+        Card(CardSuit.CLUBS, CardValue.SEVEN),
+        Card(CardSuit.SPADES, CardValue.JACK))
 
-    val card1 = Card(CardSuit.HEARTS, CardValue.QUEEN)
-    val card2 = Card(CardSuit.CLUBS, CardValue.SEVEN)
-    val card3 = Card(CardSuit.SPADES, CardValue.JACK)
-
+    val drawCards = arrayListOf(
+        Card(CardSuit.DIAMONDS, CardValue.JACK),
+        Card(CardSuit.HEARTS, CardValue.EIGHT),
+        Card(CardSuit.SPADES, CardValue.NINE),
+        Card(CardSuit.SPADES, CardValue.KING),
+        Card(CardSuit.DIAMONDS, CardValue.KING),
+    )
 
     //initialise players
     val players: List<String> = listOf( "Jack","Adam", "Katherin")
@@ -35,7 +44,10 @@ class PlayerActionServiceTest {
         val currentgame = schwimmenGameService.currentGame
         requireNotNull(currentgame)
         currentgame.incrementPassCount()
-        val currentTableCardsList = currentgame.tableStack
+
+        currentgame.cardStack.tableStack.clear()
+        currentgame.cardStack.tableStack.addAll(tableCards)
+        val currentTableCardsList =  currentgame.cardStack.tableStack
         val currentPlayersCardsList = currentgame.currentPlayer.playerCards
 
         playerActionService.exchangeAllCards()
@@ -44,7 +56,7 @@ class PlayerActionServiceTest {
         assertEquals(currentgame.passCount,0)
 
         assertEquals(currentgame.players[0].playerCards, currentTableCardsList)
-        assertEquals(currentgame.tableStack,currentPlayersCardsList)
+        assertEquals(currentgame.cardStack.tableStack,currentPlayersCardsList)
 
     }
 
@@ -56,7 +68,7 @@ class PlayerActionServiceTest {
         //if there is no currently active game
         assertFailsWith<IllegalStateException> { playerActionService.exchangeOneCard(0,0) }
 
-// if there is a currently active game
+        // if there is a currently active game
         schwimmenGameService.createNewGame(players)
 
         val currentgame = schwimmenGameService.currentGame
@@ -64,7 +76,9 @@ class PlayerActionServiceTest {
 
         currentgame.incrementPassCount() // Increment numberPassed to check if it is set back to 0 correctly.
 
-        val currentTableCardsList = currentgame.tableStack
+        currentgame.cardStack.tableStack.clear()
+        currentgame.cardStack.tableStack.addAll(tableCards)
+        val currentTableCardsList =  currentgame.cardStack.tableStack
         val currentPlayersCardsList = currentgame.currentPlayer.playerCards
 
         // same positions
@@ -77,18 +91,18 @@ class PlayerActionServiceTest {
         //assertEquals(currentGame.players[0].hand[0],currentMiddleCardsList[0])
         assertEquals(currentgame.players[0].playerCards[1],currentPlayersCardsList[1])
         assertEquals(currentgame.players[0].playerCards[2],currentPlayersCardsList[2])
-        assertEquals(currentgame.tableStack.size,3)
+        assertEquals(currentgame.cardStack.tableStack.size,3)
         assertEquals(currentgame.players[0].playerCards.size,3)
 
         // Check if middle was altered correctly.
         // assertEquals(currentGame.middle[0],currentPlayersCardsList[0])
-        assertEquals(currentgame.tableStack[1],currentTableCardsList[1])
-        assertEquals(currentgame.tableStack[2],currentTableCardsList[2])
-        assertEquals(currentgame.tableStack.size,3)
+        assertEquals(currentgame.cardStack.tableStack[1],currentTableCardsList[1])
+        assertEquals(currentgame.cardStack.tableStack[2],currentTableCardsList[2])
+        assertEquals(currentgame.cardStack.tableStack.size,3)
         assertEquals(currentgame.players[0].playerCards.size,3)
 
         // different positions
-        val currentTableCardsList1 = currentgame.tableStack
+        val currentTableCardsList1 = currentgame.cardStack.tableStack
         val currentPlayersCardsList1 = currentgame.currentPlayer.playerCards
 
         playerActionService.exchangeOneCard(2,1)
@@ -100,14 +114,14 @@ class PlayerActionServiceTest {
         assertEquals(currentgame.players[1].playerCards[0],currentPlayersCardsList1[0])
         assertEquals(currentgame.players[1].playerCards[1],currentPlayersCardsList1[1])
         //  assertEquals(currentGame.players[1].hand[2],currentMiddleCardsList1[1])
-        assertEquals(currentgame.tableStack.size,3)
+        assertEquals(currentgame.cardStack.tableStack.size,3)
         assertEquals(currentgame.players[1].playerCards.size,3)
 
         // Check if middle was altered correctly.
-        assertEquals(currentgame.tableStack[0],currentTableCardsList1[0])
+        assertEquals(currentgame.cardStack.tableStack[0],currentTableCardsList1[0])
         //    assertEquals(currentGame.middle[1],currentPlayersCardsList1[2])
-        assertEquals(currentgame.tableStack[2],currentTableCardsList1[2])
-        assertEquals(currentgame.tableStack.size,3)
+        assertEquals(currentgame.cardStack.tableStack[2],currentTableCardsList1[2])
+        assertEquals(currentgame.cardStack.tableStack.size,3)
         assertEquals(currentgame.players[1].playerCards.size,3)
     }
 
@@ -123,14 +137,16 @@ class PlayerActionServiceTest {
         val currentgame = schwimmenGameService.currentGame
         requireNotNull(currentgame)
 
-        val currentTableCardsList = currentgame.tableStack
+        currentgame.cardStack.tableStack.clear()
+        currentgame.cardStack.tableStack.addAll(tableCards)
+        val currentTableCardsList =  currentgame.cardStack.tableStack
 
         assertEquals(currentgame.passCount,0)
 
         playerActionService.pass()
 
         assertEquals(currentgame.passCount,1) // Check if numberPassed was incremented.
-        assertEquals(currentTableCardsList,currentgame.tableStack) // Check if middle was not changed.
+        assertEquals(currentTableCardsList,currentgame.cardStack.tableStack) // Check if middle was not changed.
         assertEquals(currentgame.currentPlayer.score,0.0) // Check if endGame was not triggered.
     }
 
@@ -152,6 +168,36 @@ class PlayerActionServiceTest {
 
         assertTrue(currentgame.players[0].knocked) // Check if player is marked as having knocked.
         assertSame(currentgame.currentPlayer,currentgame.players[1]) // Check if current player is advanced.
+    }
+    /**
+     * test if action pass works when all players pass in a row
+     */
+    @Test
+    fun AllPlayersPass(){
+        assertFailsWith<IllegalStateException> { playerActionService.pass() }//if there is no currently active game.
+
+        schwimmenGameService.createNewGame(players)
+
+        val currentgame = schwimmenGameService.currentGame
+        requireNotNull(currentgame)
+
+        currentgame.cardStack.tableStack.clear()
+        currentgame.cardStack.tableStack.addAll(tableCards)
+        currentgame.cardStack.drawStack.clear()
+        currentgame.cardStack.drawStack.addAll(drawCards)
+        val currentTableCardsList =  currentgame.cardStack.tableStack
+
+        playerActionService.pass()
+        playerActionService.pass()
+        playerActionService.pass()
+
+        assertEquals(currentgame.passCount,0)
+
+        assertEquals(currentgame.passCount,0) // Check if numberPassed was incremented.
+        assertEquals(currentgame.cardStack.drawStack.size, 2) // check if the draw stack size was reduced by 3.
+        assertEquals(currentTableCardsList[0].toString(), "♦J")
+        assertEquals(currentTableCardsList[1].toString(), "♥8")
+        assertEquals(currentTableCardsList[2].toString(), "♠9")
     }
 
 }

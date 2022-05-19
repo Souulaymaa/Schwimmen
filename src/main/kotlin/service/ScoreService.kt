@@ -5,9 +5,10 @@ import entity.Card
 import entity.CardSuit
 import entity.CardValue
 
-
+/**
+ * Service layer class that calculates each player's points and determinates the winner.
+ */
 class ScoreService(private val sgs: SchwimmenGameService) : AbstractRefreshingService() {
-
 
     /**
      * Calculates the score for every [Player] in the [SchwimmenGame] .
@@ -21,7 +22,6 @@ class ScoreService(private val sgs: SchwimmenGameService) : AbstractRefreshingSe
             it.score = calculateHand(it.playerCards)
         }
     }
-
 
     /**
      * Calculates the score for a given [playerCards].
@@ -38,33 +38,21 @@ class ScoreService(private val sgs: SchwimmenGameService) : AbstractRefreshingSe
                 var diamondsCounter = 0.0
                 for (i in 0..2){
                     if(playerCards[i].suit==CardSuit.CLUBS){
-
                         clubsCounter+=counter(playerCards[i])
-
                     }
-
                     else if(playerCards[i].suit==CardSuit.SPADES){
-
                         spadesCounter+=counter(playerCards[i])
-
                     }
-
                     else if(playerCards[i].suit==CardSuit.HEARTS){
-
                         heartsCounter+=counter(playerCards[i])
-
                     }
                     else if(playerCards[i].suit==CardSuit.DIAMONDS){
-
                         diamondsCounter+=counter(playerCards[i])
-
                     }
-
                 }
                 maxOf(clubsCounter,spadesCounter,heartsCounter,diamondsCounter)
             }
         return score
-
     }
 
     /**
@@ -90,8 +78,10 @@ class ScoreService(private val sgs: SchwimmenGameService) : AbstractRefreshingSe
     fun determineWinner() : Player{
         val game = sgs.currentGame
         checkNotNull(game) { "No game started yet." }
-        var maxScore : Double = 0.0
+
+        var maxScore = 0.0
         var winner : Player = game.players[0]
+
         calculateScore()
 
         for(i in 0..game.players.size-1){
@@ -102,5 +92,4 @@ class ScoreService(private val sgs: SchwimmenGameService) : AbstractRefreshingSe
         }
         return winner
     }
-
 }

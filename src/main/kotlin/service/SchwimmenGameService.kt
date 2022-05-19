@@ -7,10 +7,10 @@ import java.util.*
 /**
  * Service layer class that provides the logic for actions not directly related to a player.
  */
-class SchwimmenGameService(): AbstractRefreshingService() {
+class SchwimmenGameService: AbstractRefreshingService() {
 
-    val scoreService : ScoreService = ScoreService(this)
-    val playerActionService = PlayerActionService(this)
+    private val scoreService : ScoreService = ScoreService(this)
+    private val cardService = CardService(this)
 
     /**
      * The currently active game. Can be `null`, if no game has started yet.
@@ -25,53 +25,35 @@ class SchwimmenGameService(): AbstractRefreshingService() {
 
      */
     fun createNewGame(playerNames: List<String>) {
-        // check if the number of players is invalid
-        require(playerNames.size <= 4 && playerNames.size >= 2) {
-            "Invalid number of players: ${playerNames.size}."
-        }
-        // get a card stack
-        val cardStack = CardStack()
-       cardStack.initializeAllCards()
 
-        //calling the help method
         val players = List(playerNames.size) {
-            createPlayer(playerNames[it],cardStack)
+            createPlayer(playerNames[it])
         }
 
-        //initialize the current game
-        currentGame = SchwimmenGame(players , cardStack,  players[0])
-
-        onAllRefreshables {  refreshAfterCreateSchwimmenGame() }
-
+        currentGame = SchwimmenGame(players)
+        cardService.initializeAllCards()
+        cardService.initializeAllCardStacks()
     }
 
     /**
      * help method
-     * Creates a [Player] with the specified name and starting [CardStack].
+     * Creates a [Player] with the specified name.
      *
      * @param playerName Name of the Player.
-     * @param cardstack Starting card Stack of the Player.
      */
-    private fun createPlayer(playerName: String, cardstack: CardStack): Player {
-        return Player(playerName,cardstack)
+    private fun createPlayer(playerName: String): Player {
+        return Player(playerName)
     }
+
 
     /**
      * Method to end the current [SchwimmenGame]. The [Player]s scores are evaluated.
      */
 
     fun endGame() {
-
-        val game = currentGame
-        checkNotNull(game) { "No game started yet." }
-
         scoreService.calculateScore()
         onAllRefreshables { refreshAfterGameEnd() }
-
     }
-
-
-
 
     /**
      * Ends the current player action.
@@ -82,7 +64,7 @@ class SchwimmenGameService(): AbstractRefreshingService() {
      * Otherwise, the next player's turn will begin.
      */
     fun endMove() {
-        //get current
+        //get current game
         val game = currentGame
         checkNotNull(game) { "No game currently running."}
 
@@ -100,16 +82,4 @@ class SchwimmenGameService(): AbstractRefreshingService() {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
 

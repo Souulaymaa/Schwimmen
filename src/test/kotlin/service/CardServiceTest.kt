@@ -1,13 +1,17 @@
-package entity
+package service
 
-import kotlin.random.Random
+import entity.Card
+import entity.CardStack
+import entity.CardSuit
+import entity.CardValue
 import kotlin.test.*
 
 /**
  * Test cases for [CardStack]
  */
 
-class CardStackTest {
+class CardServiceTest {
+    private val  sgs = SchwimmenGameService()
     val card1 = Card(CardSuit.HEARTS, CardValue.EIGHT)
     val card2 = Card(CardSuit.HEARTS, CardValue.TEN)
     val card3 = Card(CardSuit.HEARTS, CardValue.QUEEN)
@@ -17,9 +21,7 @@ class CardStackTest {
      */
     @Test
     fun testinitializeAllCards() {
-
-        val stack = CardStack()
-
+        val stack = CardService(sgs)
         assertEquals(stack.initializeAllCards().size, 32)
         stack.putOnTop(mutableListOf(card1, card2, card3))
         assertEquals(stack.size, 35)
@@ -31,12 +33,11 @@ class CardStackTest {
      *  Test if drawing from an empty stack throws an exception
      */
     @Test
-    fun testDrawThree() {
-        val stack = CardStack()
-        assertFails { stack.drawThree() }
-        stack.initializeAllCards()
-        stack.drawThree()
-        assertEquals(stack.size, 29)
+    fun testitializeAllCardStacks() {
+        val stack = CardService(sgs)
+        assertEquals(stack.initializeAllCards().size, 32)
+        stack.putOnTop(mutableListOf(card1, card2, card3))
+        assertEquals(stack.size, 35)
 
     }
 
@@ -46,7 +47,7 @@ class CardStackTest {
      */
     @Test
     fun testDiscard() {
-        val stack = CardStack()
+        val stack = CardService(sgs)
         assertFails { stack.discard(card1) }
         stack.putOnTop(mutableListOf(card1, card2))
         assertFails { stack.discard(card3) }
@@ -60,14 +61,12 @@ class CardStackTest {
      */
     @Test
     fun testPeekThree() {
-        val stack = CardStack()
+        val stack = CardService(sgs)
         assertFails { stack.peekThree() }
         stack.initializeAllCards()
 
         stack.peekThree()
         assertEquals(stack.size, 32)
-
-
     }
 
     /**
@@ -75,14 +74,11 @@ class CardStackTest {
      */
     @Test
     fun testIsEmpty() {
-        val stack = CardStack()
+        val stack = CardService(sgs)
         assertTrue(stack.isEmpty())
         stack.initializeAllCards()
         assertTrue(!stack.isEmpty())
-
-
     }
-
 }
 
 

@@ -19,7 +19,6 @@ class PlayerActionService (private val sgs : SchwimmenGameService) : AbstractRef
         //get current game
         val game = sgs.currentGame
         checkNotNull(game)
-
         //mark the current player as a knocker
         game.currentPlayer.knocked = true
         sgs.endMove()
@@ -41,12 +40,15 @@ class PlayerActionService (private val sgs : SchwimmenGameService) : AbstractRef
         //get current game
         val game = sgs.currentGame
         checkNotNull(game)
+
+        var tableCards = game.cardStack.tableStack
+
         // increment the pass counter
         game.incrementPassCount()
         if (game.passCount == game.players.size) {
             //the counter is set to 0 since all players have passed
             game.resetPassCount()
-            if (game.cardStack.size >= 3) {
+            if (tableCards.size >= 3) {
                 // hilfsfunktion
                 replaceTableCards()
 
@@ -59,10 +61,8 @@ class PlayerActionService (private val sgs : SchwimmenGameService) : AbstractRef
                 sgs.endGame()
             }
         } else {
-
             sgs.endMove()
         }
-
     }
 
     /**
@@ -75,12 +75,14 @@ class PlayerActionService (private val sgs : SchwimmenGameService) : AbstractRef
         //get current game
         val game = sgs.currentGame
         checkNotNull(game)
+
         // initialise the table cards with three cards from the card stacks
-        game.tableStack = game.cardStack.drawThree()
-
-        }
-
-
+        var cardStack = game.cardStack
+            repeat(3) {
+                cardStack.tableStack.removeFirst()
+                cardStack.tableStack.add(cardStack.drawStack.removeFirst())
+            }
+    }
 
     /**
      * Method that implements the [Player] action of exchanging one card from[playerCards] with one from the [tableStack].
@@ -93,18 +95,20 @@ class PlayerActionService (private val sgs : SchwimmenGameService) : AbstractRef
         //get current game
         val game = sgs.currentGame
         checkNotNull(game)
-        //the counter is set to 0
-        game.resetPassCount()
+
+        var tableCards = game.cardStack.tableStack
+
+        game.resetPassCount() //the counter is set to 0
+
         // dreieckstausch
-        val temp = game.tableStack[tableCardPos]
-        game.tableStack[tableCardPos] = game.currentPlayer.playerCards[playerCardPos]
+        val temp = tableCards[tableCardPos]
+        tableCards[tableCardPos] = game.currentPlayer.playerCards[playerCardPos]
         game.currentPlayer.playerCards[playerCardPos] = temp
 
         onAllRefreshables {
             refreshCards()
         }
        sgs.endMove()
-
     }
 
     /**
@@ -119,21 +123,18 @@ class PlayerActionService (private val sgs : SchwimmenGameService) : AbstractRef
         val game = sgs.currentGame
         checkNotNull(game)
 
-        game.resetPassCount()
+        game.resetPassCount() // pass count set to 0
 
-        val temp = game.tableStack
-        game.tableStack = game.currentPlayer.playerCards
+        // Dreieckstausch
+        val temp = game.cardStack.tableStack
+        game.cardStack.tableStack = game.currentPlayer.playerCards
         game.currentPlayer.playerCards = temp
 
         onAllRefreshables {
             refreshCards()
         }
         sgs.endMove()
-
     }
-
-
-
 }
 
 

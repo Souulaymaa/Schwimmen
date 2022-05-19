@@ -12,15 +12,18 @@ import kotlin.test.*
  */
 class SchwimmenServiceTest {
 
-
     private val schwimmenGameService = SchwimmenGameService()
+    private val cardService = CardService(schwimmenGameService)
 
     //initialise some cards
     val card1 = Card(CardSuit.HEARTS, CardValue.QUEEN)
     val card2 = Card(CardSuit.CLUBS, CardValue.SEVEN)
     val card3 = Card(CardSuit.SPADES, CardValue.JACK)
 
-
+    val tableCards = arrayListOf<Card>(
+        Card(CardSuit.HEARTS, CardValue.SEVEN),
+        Card(CardSuit.SPADES, CardValue.ACE),
+        Card(CardSuit.DIAMONDS, CardValue.QUEEN))
 
     //initialise players
     val players1: List<String> = listOf( "Jack","Adam", "Katherin")
@@ -44,11 +47,13 @@ class SchwimmenServiceTest {
 
         val currentGame = schwimmenGameService.currentGame
         requireNotNull(currentGame)
+        currentGame.cardStack.tableStack.clear()
+        currentGame.cardStack.tableStack.addAll(tableCards)
 
         // Check if properties of game are correct.
         assertEquals(currentGame.passCount, 0)
-        assertEquals(currentGame.cardStack.size,32-currentGame.players.size*3-3)
-        assertEquals(currentGame.tableStack.size,3)
+        assertEquals(currentGame.cardStack.drawStack.size,32-currentGame.players.size*3-3)
+        assertEquals(currentGame.cardStack.tableStack.size,3)
 
         // Check if properties of each player are correct.
         currentGame.players.forEach {
@@ -72,7 +77,6 @@ class SchwimmenServiceTest {
 
         val currentGame = schwimmenGameService.currentGame
         requireNotNull(currentGame)
-
         currentGame.players.forEach {
             assertNotEquals(it.score,0.0)
         }
@@ -88,7 +92,6 @@ class SchwimmenServiceTest {
 
         val currentGame = schwimmenGameService.currentGame
         requireNotNull(currentGame)
-
         // Fill the players's hands with customized cards.
         currentGame.players[0].playerCards.clear()
         listOf(card1,card2,card3).forEach{
@@ -132,7 +135,6 @@ class SchwimmenServiceTest {
 
         val currentGame = schwimmenGameService.currentGame
         requireNotNull(currentGame)
-
         assertEquals(currentGame.currentPlayer,currentGame.players[0])
 
         schwimmenGameService.endMove()

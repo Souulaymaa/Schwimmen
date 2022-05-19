@@ -9,6 +9,10 @@ import java.lang.IllegalArgumentException
  */
 class Playertest {
 
+    val handcards = arrayListOf<Card>(
+        Card(CardSuit.HEARTS, CardValue.QUEEN),
+        Card(CardSuit.CLUBS, CardValue.SEVEN),
+        Card(CardSuit.SPADES, CardValue.JACK))
 
     /**
      * test with an empty player's name
@@ -16,7 +20,13 @@ class Playertest {
 
     @Test
     fun testEmpty(){
-        assertFailsWith<IllegalArgumentException>(){Player("")}
+        assertFailsWith<IllegalArgumentException>(){Player("", handcards)}
+    }
+
+    @Test
+    fun testName(){
+        val player = Player("Anna", handcards)
+        assertEquals(player.playerName, "Anna")
     }
 
 
