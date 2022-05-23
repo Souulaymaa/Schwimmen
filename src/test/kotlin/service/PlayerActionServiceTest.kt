@@ -15,7 +15,6 @@ class PlayerActionServiceTest {
 
     private val schwimmenGameService = SchwimmenGameService()
     private val playerActionService = PlayerActionService(schwimmenGameService)
-    private val cardService = CardService(schwimmenGameService)
 
     //initialise table cards
     val tableCards = arrayListOf<Card>(

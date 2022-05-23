@@ -22,6 +22,7 @@ class PlayerActionService (private val sgs : SchwimmenGameService) : AbstractRef
         //mark the current player as a knocker
         game.currentPlayer.knocked = true
         sgs.endMove()
+        onAllRefreshables { refreshCards() }
     }
 
 
@@ -52,9 +53,6 @@ class PlayerActionService (private val sgs : SchwimmenGameService) : AbstractRef
                 // hilfsfunktion
                 replaceTableCards()
 
-                 onAllRefreshables {
-                      refreshCards()
-                  }
                 sgs.endMove()
             } else {
                 // if we have less than 3 cards in the card stack
@@ -62,6 +60,9 @@ class PlayerActionService (private val sgs : SchwimmenGameService) : AbstractRef
             }
         } else {
             sgs.endMove()
+        }
+        onAllRefreshables {
+            refreshCards()
         }
     }
 
@@ -82,6 +83,7 @@ class PlayerActionService (private val sgs : SchwimmenGameService) : AbstractRef
                 cardStack.tableStack.removeFirst()
                 cardStack.tableStack.add(cardStack.drawStack.removeFirst())
             }
+        onAllRefreshables { refreshCards() }
     }
 
     /**

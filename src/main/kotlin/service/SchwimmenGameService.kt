@@ -1,7 +1,7 @@
 package service
 
 import entity.*
-import java.util.*
+import view.Refreshable
 
 
 /**
@@ -9,8 +9,9 @@ import java.util.*
  */
 class SchwimmenGameService: AbstractRefreshingService() {
 
-    private val scoreService : ScoreService = ScoreService(this)
-    private val cardService = CardService(this)
+    val scoreService = ScoreService(this)
+    val cardService = CardService(this)
+    val playerActionService = PlayerActionService(this)
 
     /**
      * The currently active game. Can be `null`, if no game has started yet.
@@ -33,6 +34,7 @@ class SchwimmenGameService: AbstractRefreshingService() {
         currentGame = SchwimmenGame(players)
         cardService.initializeAllCards()
         cardService.initializeAllCardStacks()
+        this.onAllRefreshables { refreshAfterCreateSchwimmenGame() }
     }
 
     /**
@@ -52,7 +54,7 @@ class SchwimmenGameService: AbstractRefreshingService() {
 
     fun endGame() {
         scoreService.calculateScore()
-        onAllRefreshables { refreshAfterGameEnd() }
+        this.onAllRefreshables { refreshAfterGameEnd() }
     }
 
     /**
@@ -76,9 +78,6 @@ class SchwimmenGameService: AbstractRefreshingService() {
 
             endGame()
 
-            onAllRefreshables {
-                refreshAfterGameEnd()
-            }
         }
     }
 }

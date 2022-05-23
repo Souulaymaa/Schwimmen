@@ -13,7 +13,6 @@ import kotlin.test.*
 class SchwimmenServiceTest {
 
     private val schwimmenGameService = SchwimmenGameService()
-    private val cardService = CardService(schwimmenGameService)
 
     //initialise some cards
     val card1 = Card(CardSuit.HEARTS, CardValue.QUEEN)

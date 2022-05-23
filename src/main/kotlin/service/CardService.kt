@@ -3,15 +3,16 @@ package service
 import entity.Card
 import entity.CardSuit
 import entity.CardValue
-import kotlin.random.Random
+import java.util.*
+import kotlin.collections.ArrayDeque
+
 
 /**
  * Service layer class that that holds [SchwimmenGame] objects and provides stack-like
  * access to them (with e.g. [initialiseAllCardStacks], [initialiseAllCards]).
  *
- * @param [random] can be provided to ensure deterministic behavior of [shuffle]
  */
-class CardService ( private val sgs: SchwimmenGameService, private val random: Random = Random) : AbstractRefreshingService() {
+class CardService ( private val sgs: SchwimmenGameService) : AbstractRefreshingService() {
     /**
      * The actual backing data structure. As there is no dedicated stack implementation
      * in Kotlin, a "double-ended queue" (Deque) is used.
@@ -32,9 +33,8 @@ class CardService ( private val sgs: SchwimmenGameService, private val random: R
     /**
      * Shuffles the cards in this stack
      */
-    private fun shuffle(){
-        cards.shuffled(random)
-
+    private fun shuffleCards(){
+        cards.shuffle(Random(123))
     }
 
     /**
@@ -46,7 +46,7 @@ class CardService ( private val sgs: SchwimmenGameService, private val random: R
                 cards.add(Card(suit, value))
             }
         }
-        shuffle()
+        shuffleCards()
         return cards
     }
 

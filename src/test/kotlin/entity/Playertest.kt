@@ -23,6 +23,9 @@ class Playertest {
         assertFailsWith<IllegalArgumentException>(){Player("", handcards)}
     }
 
+    /**
+     * test with an valid player's name
+     */
     @Test
     fun testName(){
         val player = Player("Anna", handcards)

@@ -1,13 +1,12 @@
 package view
 
-import service.AbstractRefreshingService
 
 interface Refreshable {
 
-    fun refreshAfterCreateSchwimmenGame()
+    fun refreshAfterCreateSchwimmenGame(){}
 
-    fun refreshAfterGameEnd()
+    fun refreshAfterGameEnd(){}
 
-    fun refreshCards()
+    fun refreshCards(){}
 
 }
