@@ -19,8 +19,8 @@ class ScoreServiceTest {
     val card2 = Card(CardSuit.CLUBS, CardValue.SEVEN)
     val card3 = Card(CardSuit.SPADES, CardValue.JACK)
 
-    val card4 = Card(CardSuit.HEARTS, CardValue.EIGHT)
-    val card5 = Card(CardSuit.HEARTS, CardValue.TEN)
+    val card4 = Card(CardSuit.HEARTS, CardValue.TEN)
+    val card5 = Card(CardSuit.HEARTS, CardValue.ACE)
     val card6 = Card(CardSuit.HEARTS, CardValue.QUEEN)
 
     val card7 = Card(CardSuit.HEARTS, CardValue.TEN)
@@ -59,7 +59,7 @@ class ScoreServiceTest {
         scoreService.calculateScore()
 
         assertEquals(currentGame.players[0].score,10.0)
-        assertEquals(currentGame.players[1].score,28.0)
+        assertEquals(currentGame.players[1].score,31.0)
         assertEquals(currentGame.players[2].score,30.5)
     }
 
@@ -90,7 +90,7 @@ class ScoreServiceTest {
         }
         // determines the winner
         val winner = scoreService.determineWinner()
-        assertEquals(currentGame.players[2],winner)
+        assertEquals(currentGame.players[1],winner)
     }
 
 }

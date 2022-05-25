@@ -19,7 +19,8 @@ import java.awt.Color
  * Each player has their own cards and the choice between the four actions; to pass, to knock, to exchange
  * all the cards or to exchange one card.
  */
-class SchwimmenGameScene(private val sgs: SchwimmenGameService) : BoardGameScene(background = ColorVisual(Color.BLUE)), Refreshable {
+class SchwimmenGameScene(private val sgs: SchwimmenGameService)
+    : BoardGameScene(background = ColorVisual(62,119,154)), Refreshable {
 
 
     private val currentPlayerCardView = LinearLayout<CardView>(
@@ -37,7 +38,6 @@ class SchwimmenGameScene(private val sgs: SchwimmenGameService) : BoardGameScene
     ).apply {
         rotation = 90.0
     }
-
 
     private val Player3CardView = LinearLayout<CardView>(
         posX = 700,
@@ -58,13 +58,13 @@ class SchwimmenGameScene(private val sgs: SchwimmenGameService) : BoardGameScene
     }
 
     private val currentPlayerLabel = Label(
-        posX = 650,
-        posY = 700,
-        width = 500,
-        height = 100,
-        font = Font(30),
+        posX = 700,
+        posY = 750,
+        width = 400,
+        height = 80,
+        font = Font(30, Color(15, 20, 15)),
         alignment = Alignment.CENTER,
-        visual = ColorVisual(5,5,5)
+        visual = ColorVisual(123,126,123)
     )
 
     var tableCardViews = LinearLayout<CardView>(
@@ -86,7 +86,8 @@ class SchwimmenGameScene(private val sgs: SchwimmenGameService) : BoardGameScene
             checkNotNull(game)
             updateMarkedLinearLayout(markedLinearLayoutTable,game.cardStack.tableStack)
             updateMarkedLinearLayout(markedLinearLayoutPlayer,game.currentPlayer.playerCards)
-            currentPlayerLabel.text = game.players[(game.players.indexOf(game.currentPlayer) + 1) % game.players.size].playerName
+            currentPlayerLabel.text = game.currentPlayer.playerName
+            drawStackLable.text = "${sgs.currentGame?.cardStack?.drawStack?.size}"
         }
     }
 
@@ -101,14 +102,15 @@ class SchwimmenGameScene(private val sgs: SchwimmenGameService) : BoardGameScene
             checkNotNull(game)
             updateMarkedLinearLayout(markedLinearLayoutTable,game.cardStack.tableStack)
             updateMarkedLinearLayout(markedLinearLayoutPlayer,game.currentPlayer.playerCards)
-            currentPlayerLabel.text = game.players[(game.players.indexOf(game.currentPlayer) + 1) % game.players.size].playerName
+            currentPlayerLabel.text = game.currentPlayer.playerName
+            drawStackLable.text = "${sgs.currentGame?.cardStack?.drawStack?.size}"
         }
     }
 
     private val playerExchangeAllButton = Button(
         width = 220, height = 80,
         posX = 170, posY = 950,
-        text = "Exchange All Cards", font = Font(24)
+        text = "Swap All", font = Font(24)
     ).apply {
         onMouseClicked = {
             sgs.playerActionService.exchangeAllCards()
@@ -116,14 +118,15 @@ class SchwimmenGameScene(private val sgs: SchwimmenGameService) : BoardGameScene
             checkNotNull(game)
             updateMarkedLinearLayout(markedLinearLayoutTable,game.cardStack.tableStack)
             updateMarkedLinearLayout(markedLinearLayoutPlayer,game.currentPlayer.playerCards)
-            currentPlayerLabel.text = game.players[(game.players.indexOf(game.currentPlayer) + 1) % game.players.size].playerName
+            currentPlayerLabel.text = game.currentPlayer.playerName
+            drawStackLable.text = "${sgs.currentGame?.cardStack?.drawStack?.size}"
         }
     }
 
     val playerExchangeOneCardButton = Button(
         width = 220, height = 80,
         posX = 420, posY = 950,
-        text = "Exchange One Card", font = Font(24)
+        text = "Swap One", font = Font(24)
     ).apply{
         onMouseClicked = {
             sgs.playerActionService.exchangeOneCard(
@@ -134,10 +137,10 @@ class SchwimmenGameScene(private val sgs: SchwimmenGameService) : BoardGameScene
             checkNotNull(game)
             updateMarkedLinearLayout(markedLinearLayoutTable,game.cardStack.tableStack)
             updateMarkedLinearLayout(markedLinearLayoutPlayer,game.currentPlayer.playerCards)
-            currentPlayerLabel.text = game.players[(game.players.indexOf(game.currentPlayer) + 1) % game.players.size].playerName
+            currentPlayerLabel.text = game.currentPlayer.playerName
+            drawStackLable.text = "${sgs.currentGame?.cardStack?.drawStack?.size}"
         }
     }
-
 
     val drawStackCard = LinearLayout<CardView>(
         width = 50, height = 80,
@@ -146,8 +149,8 @@ class SchwimmenGameScene(private val sgs: SchwimmenGameService) : BoardGameScene
 
     val drawStackLable = Label(
         width = 50, height = 50,
-        posX = 1300, posY = 750,
-        font = Font(28, Color(15, 20, 15))
+        posX = 1340, posY = 750,
+        font = Font(28, Color(5, 5, 5))
     )
 
      val markedLinearLayoutTable = MarkedLinearLayout<CardView>(
@@ -164,6 +167,10 @@ class SchwimmenGameScene(private val sgs: SchwimmenGameService) : BoardGameScene
         get() = markedLinearLayoutPlayer.markedComponentPosition
 
     override fun refreshAfterCreateSchwimmenGame() {
+        val game = sgs.currentGame
+        checkNotNull(game)
+        currentPlayerLabel.text = game.players[0].playerName
+        drawStackLable.text = "${sgs.currentGame?.cardStack?.drawStack?.size}"
         refreshCards()
     }
 
@@ -201,17 +208,7 @@ class SchwimmenGameScene(private val sgs: SchwimmenGameService) : BoardGameScene
             CardView(front = ImageVisual(cardImageLoader.backImage)),
             CardView(front = ImageVisual(cardImageLoader.backImage)))}
 
-        drawStackLable.text = "${sgs.currentGame?.cardStack?.drawStack?.size}"
     }
-
-    /**
-     * update the name to the current player's one
-
-    private fun changeCurrentPlayerName() {
-        val game = sgs.currentGame
-        checkNotNull(game)
-        currentPlayerLabel.text = game.players[(game.players.indexOf(game.currentPlayer) + 1) % game.players.size].playerName
-    } */
 
     init {
         addComponents(
@@ -219,8 +216,9 @@ class SchwimmenGameScene(private val sgs: SchwimmenGameService) : BoardGameScene
             Player3CardView, Player4CardView,
             playerPassButton, playerKnockButton,
             playerExchangeAllButton, playerExchangeOneCardButton,
-            tableCardViews, drawStackLable, drawStackCard,
-            markedLinearLayoutTable, markedLinearLayoutPlayer
+            tableCardViews, drawStackCard, drawStackLable,
+            markedLinearLayoutTable, markedLinearLayoutPlayer,
+            currentPlayerLabel
         )
     }
 

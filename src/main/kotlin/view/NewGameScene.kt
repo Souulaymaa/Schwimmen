@@ -28,28 +28,28 @@ class NewGameScene (private val sgs: SchwimmenGameService)
 
     private val p1Input : TextField = TextField(
         posX = 450, posY = 350, width = 300, height = 50,
-        text = "Player 1:").apply {
+        text = "Player 1:", font = Font(24)).apply {
         onKeyTyped = {
             startButton.isDisabled = createPlayerNameList().size < 2
         }
     }
     private val p2Input : TextField = TextField(
         posX = 450, posY = 450, width = 300, height = 50,
-        text = "Player 2:").apply {
+        text = "Player 2:", font = Font(24)).apply {
         onKeyTyped = {
             startButton.isDisabled = createPlayerNameList().size < 2
         }
     }
     private val p3Input : TextField = TextField(
         posX = 450, posY = 550, width = 300, height = 50,
-        text = "Player 3:").apply {
+        text = "Player 3:", font = Font(24)).apply {
         onKeyTyped = {
             startButton.isDisabled = createPlayerNameList().size < 2
         }
     }
     private val p4Input : TextField = TextField(
         posX = 450, posY = 650, width = 300, height = 50,
-        text = "Player 4:").apply {
+        text = "Player 4:", font = Font(24)).apply {
         onKeyTyped = {
             startButton.isDisabled = createPlayerNameList().size < 2
         }
@@ -57,7 +57,7 @@ class NewGameScene (private val sgs: SchwimmenGameService)
 
     private val addPlayer3Button: Button = Button(
         posX = 780, posY = 550, width = 50, height = 50,
-        text = "+", visual = ColorVisual(229, 154, 123)
+        text = "+", font = Font(24), visual = ColorVisual(229, 154, 123)
     ).apply {
         onMouseClicked = {
             p3Input.isDisabled = !p3Input.isDisabled
@@ -66,7 +66,7 @@ class NewGameScene (private val sgs: SchwimmenGameService)
 
     private val addPlayer4Button: Button = Button(
         posX = 780, posY = 650, width = 50, height = 50,
-        text = "+", visual = ColorVisual(229, 154, 123)
+        text = "+", font = Font(24), visual = ColorVisual(229, 154, 123)
     ).apply {
         onMouseClicked = {
             p4Input.isDisabled = !p4Input.isDisabled

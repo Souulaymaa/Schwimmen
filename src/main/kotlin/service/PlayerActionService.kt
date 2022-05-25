@@ -42,7 +42,7 @@ class PlayerActionService (private val sgs : SchwimmenGameService) : AbstractRef
         val game = sgs.currentGame
         checkNotNull(game)
 
-        var tableCards = game.cardStack.tableStack
+        val tableCards = game.cardStack.tableStack
 
         // increment the pass counter
         game.incrementPassCount()
@@ -78,11 +78,12 @@ class PlayerActionService (private val sgs : SchwimmenGameService) : AbstractRef
         checkNotNull(game)
 
         // initialise the table cards with three cards from the card stacks
-        var cardStack = game.cardStack
+        val cardStack = game.cardStack
             repeat(3) {
                 cardStack.tableStack.removeFirst()
                 cardStack.tableStack.add(cardStack.drawStack.removeFirst())
             }
+        //cardStack.drawStack.size = cardStack.drawStack.size - 3
         onAllRefreshables { refreshCards() }
     }
 
@@ -98,7 +99,7 @@ class PlayerActionService (private val sgs : SchwimmenGameService) : AbstractRef
         val game = sgs.currentGame
         checkNotNull(game)
 
-        var tableCards = game.cardStack.tableStack
+        val tableCards = game.cardStack.tableStack
 
         game.resetPassCount() //the counter is set to 0
 

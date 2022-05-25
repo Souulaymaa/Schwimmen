@@ -20,10 +20,10 @@ class EndGameScene (private val sgs: SchwimmenGameService)
     : MenuScene(1280, 1080, background = ColorVisual(Color.CYAN)), Refreshable{
 
     //players scores labels
-    private val p1Score = Label(width = 600, height = 35, posX = 50, posY = 125, font = Font(size = 30))
-    private val p2Score = Label(width = 600, height = 35, posX = 50, posY = 160, font = Font(size = 30))
-    private val p3Score = Label(width = 600, height = 35, posX = 50, posY = 195, font = Font(size = 30))
-    private val p4Score = Label(width = 600, height = 35, posX = 50, posY = 230, font = Font(size = 30))
+    private val p1Score = Label(width = 600, height = 35, posX = 50, posY = 125, font = Font(size = 35))
+    private val p2Score = Label(width = 600, height = 35, posX = 50, posY = 160, font = Font(size = 35))
+    private val p3Score = Label(width = 600, height = 35, posX = 50, posY = 195, font = Font(size = 35))
+    private val p4Score = Label(width = 600, height = 35, posX = 50, posY = 230, font = Font(size = 35))
 
     //label for the game winner
     private val gameResult : Label = Label(
@@ -37,13 +37,13 @@ class EndGameScene (private val sgs: SchwimmenGameService)
     private val headlineLabel = Label(
         width = 300, height = 50, posX = 50, posY = 50,
         text = "Spielende",
-        font = Font(size = 35),
+        font = Font(size = 45),
         alignment = Alignment.CENTER
     )
 
     val quitButton = Button(
         width = 320, height = 80,
-        posX = 350, posY = 800,
+        posX = 250, posY = 800,
         text = "Beenden",
         font = Font(34)
     ).apply {
@@ -53,7 +53,7 @@ class EndGameScene (private val sgs: SchwimmenGameService)
 
     val newGameButton = Button(
         width = 320, height = 80,
-        posX = 790, posY = 800,
+        posX = 700, posY = 800,
         text = "Neustarten",
         font = Font(34)
     ).apply {

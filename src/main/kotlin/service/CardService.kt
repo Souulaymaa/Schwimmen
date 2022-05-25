@@ -23,7 +23,7 @@ class CardService ( private val sgs: SchwimmenGameService) : AbstractRefreshingS
     /**
      * the amount of cards in this stack
      */
-    val size: Int get() = cards.size
+    val size: Int get () = cards.size
 
     /**
      * Returns `true` if the stack is empty, `false` otherwise.

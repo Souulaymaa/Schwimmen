@@ -74,7 +74,7 @@ class SchwimmenGameService: AbstractRefreshingService() {
         //Advances the pointer currentPlayer in [SchwimmenGame] to the next [Player].
         game.currentPlayer = game.players[(game.players.indexOf(game.currentPlayer) + 1) % game.players.size]
 
-        if (game.currentPlayer.knocked && game.players.size==game.players.indexOf(x)+1 ) {
+        if (game.currentPlayer.knocked  ) {
 
             endGame()
 
