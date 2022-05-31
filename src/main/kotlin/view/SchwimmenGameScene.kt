@@ -132,8 +132,8 @@ class SchwimmenGameScene(private val sgs: SchwimmenGameService)
         onMouseClicked = {
             if(markedTableCardPosition in 0..2 || markedPlayerCardPosition in 0..2){
             sgs.playerActionService.exchangeOneCard(
-                playerCardPos = markedTableCardPosition,
-                tableCardPos = markedPlayerCardPosition
+                playerCardPos = markedPlayerCardPosition,
+                tableCardPos = markedTableCardPosition
             )
             val game = sgs.currentGame
             checkNotNull(game)

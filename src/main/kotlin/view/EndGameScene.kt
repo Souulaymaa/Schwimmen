@@ -29,7 +29,7 @@ class EndGameScene (private val sgs: SchwimmenGameService)
     private val gameResult : Label = Label(
         width = 600, height = 35,
         posX = 50, posY = 450,
-        font = Font(30, Color(54,65,45)),
+        font = Font(35, Color(54,65,45)),
         alignment = Alignment.CENTER
     )
 
@@ -41,7 +41,7 @@ class EndGameScene (private val sgs: SchwimmenGameService)
         alignment = Alignment.CENTER
     )
 
-    val quitButton = Button(
+    private val quitButton = Button(
         width = 320, height = 80,
         posX = 250, posY = 800,
         text = "Beenden",
@@ -71,11 +71,21 @@ class EndGameScene (private val sgs: SchwimmenGameService)
     private fun Player.scoreString(): String = "${this.playerName} scored ${this.score} points."
 
     /**
-     * get the name of the winner back
+     * get the name of the winner back or determines a draw if the points are equal.
      */
     private fun gameResultString(): String {
+        val game = sgs.currentGame
+        checkNotNull(game)
+        var res = " "
         val winner = sgs.scoreService.determineWinner()
-        return "$winner wins the game."
+        for(i in 0..game.players.size-1){
+            if(game.players[i] == winner){
+                res = "$winner wins the game."
+            } else {
+                 res = "There is a draw."
+            }
+        }
+        return res
     }
 
     /**
