@@ -12,6 +12,7 @@ import tools.aqua.bgw.visual.ColorVisual
 import tools.aqua.bgw.visual.ImageVisual
 import java.awt.Color
 
+
 /**
  * This is the main Scene for the Schwimmen game, in which all game actions happen.
  * Player 1 "sits" is on the bottom half of the screen, player 2 on the right, Player 3 on the top,
@@ -30,7 +31,7 @@ class SchwimmenGameScene(private val sgs: SchwimmenGameService)
         height = 80,
     )
 
-    private val Player2CardView = LinearLayout<CardView>(
+    private val secondPlayerCardView = LinearLayout<CardView>(
         posX = 1500,
         posY = 500,
         width = 300,
@@ -39,7 +40,7 @@ class SchwimmenGameScene(private val sgs: SchwimmenGameService)
         rotation = 90.0
     }
 
-    private val Player3CardView = LinearLayout<CardView>(
+    private val thirdPlayerCardView = LinearLayout<CardView>(
         posX = 700,
         posY = 150,
         width = 300,
@@ -48,7 +49,7 @@ class SchwimmenGameScene(private val sgs: SchwimmenGameService)
         rotation = 180.0
     }
 
-    private val Player4CardView = LinearLayout<CardView>(
+    private val fourthPlayerCardView = LinearLayout<CardView>(
         posX = 0,
         posY = 500,
         width = 300,
@@ -129,6 +130,7 @@ class SchwimmenGameScene(private val sgs: SchwimmenGameService)
         text = "Swap One", font = Font(24)
     ).apply{
         onMouseClicked = {
+            if(markedTableCardPosition in 0..2 || markedPlayerCardPosition in 0..2){
             sgs.playerActionService.exchangeOneCard(
                 playerCardPos = markedTableCardPosition,
                 tableCardPos = markedPlayerCardPosition
@@ -139,7 +141,7 @@ class SchwimmenGameScene(private val sgs: SchwimmenGameService)
             updateMarkedLinearLayout(markedLinearLayoutPlayer,game.currentPlayer.playerCards)
             currentPlayerLabel.text = game.currentPlayer.playerName
             drawStackLable.text = "${sgs.currentGame?.cardStack?.drawStack?.size}"
-        }
+        }}
     }
 
     val drawStackCard = LinearLayout<CardView>(
@@ -177,9 +179,9 @@ class SchwimmenGameScene(private val sgs: SchwimmenGameService)
     override fun refreshCards() {
         currentPlayerCardView.clear()
         tableCardViews.clear()
-        Player2CardView.clear()
-        Player3CardView.clear()
-        Player4CardView.clear()
+        secondPlayerCardView.clear()
+        thirdPlayerCardView.clear()
+        fourthPlayerCardView.clear()
         val game = sgs.currentGame
         checkNotNull(game)
         val tableCards = game.cardStack.tableStack
@@ -188,7 +190,7 @@ class SchwimmenGameScene(private val sgs: SchwimmenGameService)
 
         drawStackCard.add(CardView( front = ImageVisual(cardImageLoader.backImage)))
 
-        Player2CardView.addAll(CardView(
+        secondPlayerCardView.addAll(CardView(
             front = ImageVisual(cardImageLoader.backImage)),
             CardView(front = ImageVisual(cardImageLoader.backImage)),
             CardView(front = ImageVisual(cardImageLoader.backImage)))
@@ -197,13 +199,13 @@ class SchwimmenGameScene(private val sgs: SchwimmenGameService)
         updateMarkedLinearLayout(markedLinearLayoutPlayer,playerCards)
 
         if (game.players.size >= 3) {
-        Player3CardView.addAll(CardView(
+            thirdPlayerCardView.addAll(CardView(
             front = ImageVisual(cardImageLoader.backImage)),
             CardView(front = ImageVisual(cardImageLoader.backImage)),
             CardView(front = ImageVisual(cardImageLoader.backImage)))}
 
         if (game.players.size == 4) {
-        Player4CardView.addAll(CardView(
+            fourthPlayerCardView.addAll(CardView(
             front = ImageVisual(cardImageLoader.backImage)),
             CardView(front = ImageVisual(cardImageLoader.backImage)),
             CardView(front = ImageVisual(cardImageLoader.backImage)))}
@@ -212,8 +214,8 @@ class SchwimmenGameScene(private val sgs: SchwimmenGameService)
 
     init {
         addComponents(
-            currentPlayerCardView,Player2CardView,
-            Player3CardView, Player4CardView,
+            currentPlayerCardView,secondPlayerCardView,
+            thirdPlayerCardView, fourthPlayerCardView,
             playerPassButton, playerKnockButton,
             playerExchangeAllButton, playerExchangeOneCardButton,
             tableCardViews, drawStackCard, drawStackLable,

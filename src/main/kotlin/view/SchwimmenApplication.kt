@@ -2,6 +2,8 @@ package view
 
 import service.SchwimmenGameService
 import tools.aqua.bgw.core.BoardGameApplication
+import tools.aqua.bgw.dialog.Dialog
+import tools.aqua.bgw.dialog.DialogType
 
 /**
  * Implementation of the BGW [BoardGameApplication] for the card game "Schwimmen"
@@ -32,7 +34,9 @@ class SchwimmenApplication : BoardGameApplication( "Schwimmen"), Refreshable {
         }
     }
 
+
     init {
+
         this.showGameScene(gameScene)
         this.showMenuScene(newGameScene)
 

@@ -70,7 +70,6 @@ class SchwimmenGameService: AbstractRefreshingService() {
         val game = currentGame
         checkNotNull(game) { "No game currently running."}
 
-        val x = game.currentPlayer
         //Advances the pointer currentPlayer in [SchwimmenGame] to the next [Player].
         game.currentPlayer = game.players[(game.players.indexOf(game.currentPlayer) + 1) % game.players.size]
 
