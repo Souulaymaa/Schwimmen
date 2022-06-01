@@ -79,7 +79,7 @@ class EndGameScene (private val sgs: SchwimmenGameService)
         var res = " "
         val winner = sgs.scoreService.determineWinner()
         for(i in 0..game.players.size-1){
-            if(game.players[i] == winner){
+            if(game.players[i].score != winner.score){
                 res = "$winner wins the game."
             } else {
                  res = "There is a draw."

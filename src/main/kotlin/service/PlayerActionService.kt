@@ -42,7 +42,7 @@ class PlayerActionService (private val sgs : SchwimmenGameService) : AbstractRef
         val game = sgs.currentGame
         checkNotNull(game)
 
-        val tableCards = game.cardStack.tableStack
+        val tableCards = game.cardStack.drawStack
 
         // increment the pass counter
         game.incrementPassCount()
